@@ -14,19 +14,58 @@
 </style>
 
 <body>
-    <script type="module">
+    <script>
+        const labels = [
+            "Black",
+            "Blue",
+            "Brown",
+            "Green",
+            "Grey",
+            "Orange",
+            "Pink",
+            "Purple",
+            "Red",
+            "White",
+            "Yellow"
+        ]
 
-        const model = await tf.loadLayersModel('https://raw.githubusercontent.com/magswag/ColourClassifier/main/model.json');
+        var model
+        async function loadModel() {
+            model = await tf.loadLayersModel('https://raw.githubusercontent.com/magswag/ColourClassifier/main/model.json')
+        }
+
+        class L2 {
+
+            static className = 'L2';
+
+            constructor(config) {
+                return tf.regularizers.l1l2(config)
+            }
+        }
+        tf.serialization.registerClass(L2);
+
+        loadModel()
+
 
         function onChanged() {
-            console.log("asidas")
+            let r = document.getElementById("r").value
+            let g = document.getElementById("g").value
+            let b = document.getElementById("b").value
+
+            document.getElementById("yurr").style.backgroundColor = "rgb(" + r.toString() + "," + g.toString() + "," + b.toString() + ")"
+            let prediction = model.predict(tf.tensor2d([[r / 255, g / 255, b / 255]]))
+            //prediction.argMax(1).print()
+            //prediction.print()
+
+            document.getElementById("pred").innerHTML = labels[prediction.argMax(1).dataSync()[0]]
         }
     </script>
 
-    <div></div>
-    <input type="range" min="0" max="255" value="0" onchange="onChanged()">
-    <input type="range" min="0" max="255" value="0" onchange="onChanged()">
-    <input type="range" min="0" max="255" value="0" onchange="onChanged()">
+    <div id="yurr"></div>
+    <input type="range" min="0" max="255" value="0" onchange="onChanged()" id="r">
+    <input type="range" min="0" max="255" value="0" onchange="onChanged()" id="g">
+    <input type="range" min="0" max="255" value="0" onchange="onChanged()" id="b">
+    <p id="pred">Blue</p>
 </body>
 
 </html>
