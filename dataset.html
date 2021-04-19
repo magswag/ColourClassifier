@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Col</title>
+
+</head>
+
+<body>
+    <style>
+        body {
+            background-color: blue;
+            margin: 0;
+        }
+
+        #bottombar {
+            width: 100%;
+            padding: 16px;
+            background-color: white;
+            position: fixed;
+            bottom: 0px;
+        }
+
+        #bottombar button {
+            background-color: turquoise;
+            border: 0;
+            padding: 8px;
+            font-size: 16pt;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.20);
+            border-radius: 4px;
+        }
+    </style>
+    <div id="bottombar">
+        <div>
+            <button style="background-color: red; color: white;" onclick="buttonClicked(this)">red</button>
+            <button style="background-color: rgb(0, 255, 0); color: white;" onclick="buttonClicked(this)">green</button>
+            <button style="background-color: rgb(0, 0, 255); color: black;" onclick="buttonClicked(this)">blue</button>
+            <button style="background-color: yellow; color: white;" onclick="buttonClicked(this)">yellow</button>
+            <button style="background-color: orange; color: white;" onclick="buttonClicked(this)">orange</button>
+            <button style="background-color: pink; color: black;" onclick="buttonClicked(this)">pink</button>
+            <button style="background-color: purple; color: white;" onclick="buttonClicked(this)">purple</button>
+            <button style="background-color: brown; color: white;" onclick="buttonClicked(this)">brown</button>
+            <button style="background-color: grey; color: white;" onclick="buttonClicked(this)">grey</button>
+            <button style="background-color: black; color: white;" onclick="buttonClicked(this)">black</button>
+            <button style="background-color: white; color: black;" onclick="buttonClicked(this)">white</button>
+
+            <button style="background-color: white; color: black; right:0px;" onclick="done()">DONE</button>
+            <h1 id="cou">0</h1>
+        </div>
+    </div>
+
+    <script>
+        var colours = [];
+        var currentRandomColour
+
+        function CSVify(items) {
+            let csv = "";
+            csv += "label,r,g,b\n"
+
+            for (let i = 0; i < colours.length; i++) {
+                csv += colours[i].label + "," + colours[i].r.toString() + "," + colours[i].g.toString() + "," + colours[i].b.toString() + "\n"
+            }
+
+            // Once we are done looping, download the .csv by creating a link
+            let link = document.createElement('a')
+            link.id = 'download-csv'
+            link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv));
+            link.setAttribute('download', 'yourfiletextgoeshere.csv');
+            document.body.appendChild(link)
+            document.querySelector('#download-csv').click()
+        }
+
+
+        function rgb(r, g, b) {
+            return ["rgb(", r, ",", g, ",", b, ")"].join("");
+        }
+
+        function newRandomColour() {
+            let colour = {
+                r: Math.floor(Math.random() * 255),
+                g: Math.floor(Math.random() * 255),
+                b: Math.floor(Math.random() * 255)
+            };
+            currentRandomColour = colour
+            return colour;
+        }
+        function setTheColour() {
+            let randomColour = newRandomColour();
+            let rrgbaa = rgb(randomColour.r, randomColour.g, randomColour.b);
+            document.body.style.background = rrgbaa;
+        }
+
+        function buttonClicked(yyyy) {
+
+            colours.push({
+                label: yyyy.innerHTML,
+                r: currentRandomColour.r,
+                g: currentRandomColour.g,
+                b: currentRandomColour.b
+            });
+
+            setTheColour()
+
+
+
+            document.getElementById("cou").innerHTML = colours.length.toString();
+        }
+
+        function done() {
+            CSVify(colours);
+        }
+
+        setTheColour()
+
+    </script>
+</body>
+
+</html>
