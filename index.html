@@ -3,13 +3,30 @@
 
 <head>
     <title>Colours</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
 </head>
 <style>
-    div {
+    .card {
+        overflow: hidden;
+        border-radius: 24px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        background-color: white;
+    }
+
+    .card .content {
+        padding: 16px;
+        vertical-align: middle;
+    }
+
+    #colourSquare {
         background-color: blue;
         width: 100%;
-        height: 50px;
+        height: 100px;
+    }
+
+    body {
+        margin: 16px;
     }
 </style>
 
@@ -52,7 +69,7 @@
             let g = document.getElementById("g").value
             let b = document.getElementById("b").value
 
-            document.getElementById("yurr").style.backgroundColor = "rgb(" + r.toString() + "," + g.toString() + "," + b.toString() + ")"
+            document.getElementById("colourSquare").style.backgroundColor = "rgb(" + r.toString() + "," + g.toString() + "," + b.toString() + ")"
             let prediction = model.predict(tf.tensor2d([[r / 255, g / 255, b / 255]]))
             //prediction.argMax(1).print()
             //prediction.print()
@@ -60,12 +77,15 @@
             document.getElementById("pred").innerHTML = labels[prediction.argMax(1).dataSync()[0]]
         }
     </script>
-
-    <div id="yurr"></div>
-    <input type="range" min="0" max="255" value="0" onchange="onChanged()" id="r">
-    <input type="range" min="0" max="255" value="0" onchange="onChanged()" id="g">
-    <input type="range" min="0" max="255" value="0" onchange="onChanged()" id="b">
-    <p id="pred">Blue</p>
+    <div class="card">
+        <div id="colourSquare"></div>
+        <div class="content">
+            <input type="range" min="0" max="255" value="0" oninput="onChanged()" id="r">
+            <input type="range" min="0" max="255" value="0" oninput="onChanged()" id="g">
+            <input type="range" min="0" max="255" value="0" oninput="onChanged()" id="b">
+            <p id="pred">Blue</p>
+        </div>
+    </div>
 </body>
 
 </html>
