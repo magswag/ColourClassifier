@@ -103,11 +103,7 @@
         var model
         async function loadModel() {
             model = await tf.loadLayersModel('https://raw.githubusercontent.com/magswag/ColourClassifier/main/model.json')
-            let col = JSON.parse(document.cookie)
 
-            document.getElementById("r").value = col.red
-            document.getElementById("g").value = col.green
-            document.getElementById("b").value = col.blue
 
             onSliderInput()
         }
@@ -154,7 +150,11 @@
         }
 
         function onLoaded() {
+            let col = JSON.parse(document.cookie)
 
+            document.getElementById("r").value = col.red
+            document.getElementById("g").value = col.green
+            document.getElementById("b").value = col.blue
         }
 
     </script>
