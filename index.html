@@ -35,7 +35,7 @@
     }
 
     input {
-        
+
         outline: none;
         border-radius: 8px;
         appearance: none;
@@ -84,7 +84,7 @@
     }
 </style>
 
-<body>
+<body onload="onLoaded()">
     <script>
         const labels = [
             "Black",
@@ -103,6 +103,13 @@
         var model
         async function loadModel() {
             model = await tf.loadLayersModel('https://raw.githubusercontent.com/magswag/ColourClassifier/main/model.json')
+            let col = JSON.parse(document.cookie)
+
+            document.getElementById("r").value = col.red
+            document.getElementById("g").value = col.green
+            document.getElementById("b").value = col.blue
+
+            onSliderInput()
         }
 
         class L2 {
@@ -118,25 +125,48 @@
         loadModel()
 
 
-        function onChanged() {
+
+
+        function onSliderInput() {
             let r = document.getElementById("r").value
             let g = document.getElementById("g").value
             let b = document.getElementById("b").value
 
             document.getElementById("colourSquare").style.backgroundColor = "rgb(" + r.toString() + "," + g.toString() + "," + b.toString() + ")"
             let prediction = model.predict(tf.tensor2d([[r / 255, g / 255, b / 255]]))
-            //prediction.argMax(1).print()
-            //prediction.print()
+
 
             document.getElementById("pred").innerHTML = labels[prediction.argMax(1).dataSync()[0]]
+
+
         }
+
+        function onChange() {
+            let r = document.getElementById("r").value
+            let g = document.getElementById("g").value
+            let b = document.getElementById("b").value
+            let colour = {
+                red: r,
+                green: g,
+                blue: b
+            }
+            document.cookie = JSON.stringify(colour)
+        }
+
+        function onLoaded() {
+
+        }
+
     </script>
     <div class="card" style="margin-bottom: 16px;">
         <div id="colourSquare"></div>
         <div class="content">
-            <input type="range" min="0" max="255" value="0" oninput="onChanged()" id="r" style="margin-bottom: 24px;">
-            <input type="range" min="0" max="255" value="0" oninput="onChanged()" id="g" style="margin-bottom: 24px;">
-            <input type="range" min="0" max="255" value="0" oninput="onChanged()" id="b" style="margin-bottom: 16px;">
+            <input type="range" min="0" max="255" value="0" oninput="onSliderInput()" onchange="onChange()" id="r"
+                style="margin-bottom: 24px;">
+            <input type="range" min="0" max="255" value="0" oninput="onSliderInput()" onchange="onChange()" id="g"
+                style="margin-bottom: 24px;">
+            <input type="range" min="0" max="255" value="0" oninput="onSliderInput()" onchange="onChange()" id="b"
+                style="margin-bottom: 16px;">
             <p id="pred">Blue</p>
         </div>
     </div>
