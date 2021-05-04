@@ -38,7 +38,6 @@
     }
 
     input {
-
         outline: none;
         border-radius: 8px;
         appearance: none;
@@ -70,7 +69,7 @@
     #colourSquare {
         background-color: blue;
         width: 100%;
-        height: 200px;
+        height: 90px;
     }
 
     body {
@@ -89,7 +88,17 @@
         opacity: 0.5;
     }
 
-    @media only screen and (min-width: 768px) {
+    @media screen and (orientation:landscape) and (max-width: 1000px) {
+        body {
+            display: flex;
+        }
+
+        .card {
+            margin: 0px;
+        }
+    }
+
+    @media only screen and (min-width: 1000px) {
         .card {
             width: 40%;
         }
@@ -183,7 +192,7 @@
         }
 
     </script>
-    <div class="card" style="margin-bottom: 16px;">
+    <div class="card">
         <div id="colourSquare"></div>
         <div class="content">
             <input type="range" min="0" max="255" value="0" oninput="onSliderInput()" onchange="onChange()" id="r"
@@ -198,7 +207,7 @@
     <div class="card">
         <h1><span class="material-icons">palette</span>Palette</h1>
         <div id="colour-swaps"
-            style="display: grid; grid-template-columns: repeat(auto-fill, 32px); grid-template-rows: repeat(auto-fill, 32px); height:500px; grid-gap: 4px; padding: 16px;">
+            style="display: grid; grid-template-columns: repeat(auto-fill, 32px); grid-template-rows: repeat(auto-fill, 32px); grid-gap: 4px; padding: 16px;">
             <button onclick="newSwatch(this)"><span class="material-icons">add</span></button>
         </div>
     </div>
