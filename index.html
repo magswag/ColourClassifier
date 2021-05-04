@@ -5,6 +5,9 @@
     <title>Colours</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style>
     @media (prefers-color-scheme: dark) {
@@ -71,10 +74,19 @@
     }
 
     body {
-        font-family: sans-serif;
+        font-family: "Poppins", sans-serif;
         color: var(--main-text-color);
         background-color: var(--main-bg-color);
         margin: 16px;
+    }
+
+    .colour-swap {
+        background-color: green;
+        border-radius: 6px;
+    }
+
+    .colour-swap:hover {
+        opacity: 0.5;
     }
 
     @media only screen and (min-width: 768px) {
@@ -120,21 +132,20 @@
 
         loadModel()
 
-
-
+        function rgbToString(r, g, b) {
+            return "rgb(" + r.toString() + "," + g.toString() + "," + b.toString() + ")"
+        }
 
         function onSliderInput() {
             let r = document.getElementById("r").value
             let g = document.getElementById("g").value
             let b = document.getElementById("b").value
 
-            document.getElementById("colourSquare").style.backgroundColor = "rgb(" + r.toString() + "," + g.toString() + "," + b.toString() + ")"
+            document.getElementById("colourSquare").style.backgroundColor = rgbToString(r, g, b)
             let prediction = model.predict(tf.tensor2d([[r / 255, g / 255, b / 255]]))
 
 
             document.getElementById("pred").innerHTML = labels[prediction.argMax(1).dataSync()[0]]
-
-
         }
 
         function onChange() {
@@ -157,6 +168,20 @@
             document.getElementById("b").value = col.blue
         }
 
+        function newSwatch(butt) {
+            let col = JSON.parse(document.cookie)
+            var d = document.createElement("DIV")
+            d.classList.add("colour-swap")
+            d.style.backgroundColor = rgbToString(col.red, col.green, col.blue)
+
+            let prediction = model.predict(tf.tensor2d([[col.red / 255, col.green / 255, col.blue / 255]]))
+
+            d.setAttribute("data-colour-label", labels[prediction.argMax(1).dataSync()[0]])
+            d.setAttribute("title", labels[prediction.argMax(1).dataSync()[0]])
+
+            let container = document.getElementById("colour-swaps").insertBefore(d, butt)
+        }
+
     </script>
     <div class="card" style="margin-bottom: 16px;">
         <div id="colourSquare"></div>
@@ -170,7 +195,13 @@
             <p id="pred">Blue</p>
         </div>
     </div>
-    <div class="card">Palette</div>
+    <div class="card">
+        <h1><span class="material-icons">palette</span>Palette</h1>
+        <div id="colour-swaps"
+            style="display: grid; grid-template-columns: repeat(auto-fill, 32px); grid-template-rows: repeat(auto-fill, 32px); height:500px; grid-gap: 4px; padding: 16px;">
+            <button onclick="newSwatch(this)"><span class="material-icons">add</span></button>
+        </div>
+    </div>
 </body>
 
 </html>
